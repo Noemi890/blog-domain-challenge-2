@@ -38,11 +38,31 @@ async function seed() {
     data: {
       userId: createdUser.id,
       postId: createdPost.id,
-      content: "Really Happy! This is fun!"
+      content: "Really Happy! This is fun!",
+      replies: {
+        create: [
+          {
+            userId: createdUser.id,
+            postId: createdPost.id,
+            content: "You're crazy"
+          }
+        ]
+      }
+    },
+    include: {
+      replies: true
     }
   })
 
   console.log('comment', createdComment, createdPost)
+
+  const createdCategory = await prisma.category.create({
+    data: {
+      name: "Dev"
+    }
+  })
+
+  console.log('my category', createdCategory)
 
 }
 
