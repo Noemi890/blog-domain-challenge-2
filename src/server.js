@@ -16,3 +16,5 @@ const commentsRouter = require('./routers/comments')
 app.use('/users/:id/comments', commentsRouter)
 const categoryRouter = require('./routers/categories')
 app.use('/categories', categoryRouter)
+
+module.exports = app
