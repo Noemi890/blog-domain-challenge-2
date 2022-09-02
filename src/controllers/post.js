@@ -79,6 +79,28 @@ const createPost = async (req, res) => {
   res.status(201).json({ post: createdPost})
 }
 
+const getPost = async (req, res) => {
+  const page = Number(req.query.page)
+  const perPage = Number(req.query.perPage)
+  const id = Number(req.params.id)
+
+  const user = await findUserById(id)
+
+  if(!user) return res.status(404).json({ error: 'User with that ID does not exist' })
+
+  const skip = page * perPage
+
+  const foundPosts = await prisma.post.findMany({
+    skip,
+    take: perPage,
+    where: {
+      userId: id
+    }
+  })
+
+  res.json({ posts: foundPosts})
+}
+
 module.exports = {
-  createPost  
+  createPost, getPost
 }
