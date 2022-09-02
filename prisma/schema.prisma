@@ -40,7 +40,7 @@ model Comment {
   parent    Comment?  @relation("reply", fields: [parentId], references: [id])
   replies   Comment[] @relation("reply")
   postId    Int       
-  post      Post      @relation(fields: [postId], references: [id])
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
   content   String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
