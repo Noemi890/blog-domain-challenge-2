@@ -88,15 +88,26 @@ const getPost = async (req, res) => {
 
   if(!user) return res.status(404).json({ error: 'User with that ID does not exist' })
 
-  const skip = page * perPage
+  const skip = (page - 1) * perPage
 
   const foundPosts = await prisma.post.findMany({
     skip,
     take: perPage,
     where: {
       userId: id
+    },
+    include: {
+      category: true,
+      user: {
+        include: {
+          profile: true
+        }
+      },
+      comment: true
     }
   })
+
+  console.log(foundPosts)
 
   res.json({ posts: foundPosts})
 }
