@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 const userRouter = require('./routers/users')
 app.use('/users', userRouter)
 const postRouter = require('./routers/posts')
-app.use('/users/:id/posts', postRouter)
+app.use('/users', postRouter)
 const commentsRouter = require('./routers/comments')
 app.use('/users/:id/comments', commentsRouter)
 const categoryRouter = require('./routers/categories')
