@@ -8,14 +8,19 @@ const createUser = async (req, res) => {
 
   const found = await prisma.user.findFirst({
     where: {
-      OR: {
-      username,
-      email
-      }
+      OR: [
+        {
+        email
+        },
+        {
+        username
+        }
+      ]
     }
   })
 
   if(found) return res.status(409).json({ error: 'A user with the provided username/email already exist' })
+
   
   const createdUser = await prisma.user.create({
     data: {
@@ -40,6 +45,58 @@ const createUser = async (req, res) => {
   
 }
 
+const updateUser = async (req, res) => {
+  const id = Number(req.params.id)
+  const { username, email, password, firstName, lastName, age, pictureUrl } = req.body
+
+  const found = await prisma.user.findUnique({
+    where: {
+      id
+    }
+  })
+
+  if(!found) return res.status(404).json({ error: 'User with that ID does not exist' })
+
+  const existingUser = await prisma.user.findFirst({
+    where: {
+      OR: [
+        {
+        username
+        },
+        {
+        email
+        }
+      ]
+    }
+  })
+
+  if (existingUser) return res.status(409).json({ error: 'A user with the provided username/email already exist' })
+
+  const updatedUser = await prisma.user.update({
+    where: {
+      id
+    },
+    data: {
+      username, 
+      email, 
+      password, 
+      profile: { 
+        update: { 
+          firstName, 
+          lastName, 
+          age, 
+          pictureUrl 
+        }
+      }
+    },
+    include: {
+      profile: true
+    }
+  })
+
+  res.status(201).json({ user: updatedUser })
+}
+
 module.exports = {
-  createUser  
+  createUser, updateUser
 }
