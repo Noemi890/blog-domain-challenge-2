@@ -10,12 +10,17 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
 const userRouter = require('./routers/users')
-app.use('/users', userRouter)
 const postRouter = require('./routers/posts')
-app.use('/users', postRouter)
 const commentsRouter = require('./routers/comments')
-app.use('/users/:id/comments', commentsRouter)
 const categoryRouter = require('./routers/categories')
+
+app.use('/users', userRouter)
+
+app.use('/users', postRouter)
+app.use('/posts', postRouter)
+
+app.use('/users/:id/comments', commentsRouter)
+
 app.use('/categories', categoryRouter)
 
 module.exports = app

@@ -112,6 +112,30 @@ const getPost = async (req, res) => {
   res.json({ posts: foundPosts})
 }
 
+const deletePost = async (req, res) => {
+
+}
+
+const getAllPosts = async (req, res) => {
+  const posts = await prisma.post.findMany({
+    include: {
+      user: {
+        include: {
+          profile: true
+        }
+      },
+      comment: {
+        include: {
+          replies: true
+        }
+      },
+      category: true
+    }
+  })
+
+  res.json({ posts })
+}
+
 module.exports = {
-  createPost, getPost
+  createPost, getPost, deletePost, getAllPosts
 }
