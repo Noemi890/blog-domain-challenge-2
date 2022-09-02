@@ -97,6 +97,29 @@ const updateUser = async (req, res) => {
   res.status(201).json({ user: updatedUser })
 }
 
+const deleteUser = async (req, res) => {
+  const id = Number(req.params.id)
+
+  const found = await prisma.user.findUnique({
+    where: {
+      id
+    }
+  })
+
+  if(!found) return res.status(404).json({ error: 'User with that ID does not exist' })
+
+  const deletedUser = await prisma.user.delete({
+    where: {
+      id
+    },
+    include: {
+      profile: true
+    }
+  })
+
+  res.status(201).json({ user: deletedUser })
+}
+
 module.exports = {
-  createUser, updateUser
+  createUser, updateUser, deleteUser
 }
